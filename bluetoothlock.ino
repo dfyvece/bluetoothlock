@@ -137,6 +137,7 @@ void loop() {
       if (buttonstate == HIGH && buttonstate != lastbuttonstate) {
         Serial.println("Go to UNLOCKED");
         state = UNLOCKED;
+        lastbuttonstate = buttonstate;
         return;
       }
       lastbuttonstate = buttonstate;
@@ -155,9 +156,11 @@ void loop() {
         if (strcmp(value,password) == 0) {
           Serial.println("Valid password entered");
           bluetooth.println("Unlocking...");
+          locker.write(unlock);
           holdUnlock();
           if (state == UNLOCKED) return;
           Serial.println("Locking again");
+          locker.write(lock);
           bluetooth.println("Locking");
         }
         else {
